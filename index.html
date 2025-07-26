@@ -3,464 +3,449 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgroGest Pro - Sistema de Gestão de Custos Rurais</title>
+    <title>Planilha de Custos Rurais - Controle Completo</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌾</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <!-- Sistema Principal -->
-    <div id="mainSystem" class="main-system">
+    <!-- Cabeçalho -->
+    <header class="header">
         <div class="container">
-        <header class="header">
             <div class="header-content">
-                <div>
-                    <div class="logo">
-                        <span class="logo-icon">🌾</span>
-                        <h1>AgroGest Pro</h1>
-                    </div>
+                <div class="logo">
+                    <span class="logo-icon">🌾</span>
+                    <span class="logo-text">Planilha de Custos Rurais</span>
                 </div>
-                <p class="subtitle">Sistema Profissional de Gestão de Custos Rurais</p>
-                <div class="farm-info">
-                    <input type="text" id="farmName" placeholder="Nome da Fazenda/Propriedade" class="farm-input">
-                    <input type="text" id="farmOwner" placeholder="Proprietário/Responsável" class="farm-input">
-                    <input type="number" id="farmSize" placeholder="Área (hectares)" class="farm-input">
-                </div>
-            </div>
-        </header>
-
-        <div class="dashboard">
-            <div class="summary-cards">
-                <div class="card">
-                    <div class="card-icon">💰</div>
-                    <h3>Custo Total</h3>
-                    <div class="value" id="totalCost">R$ 0,00</div>
-                    <div class="change" id="costChange">-</div>
-                </div>
-                <div class="card">
-                    <div class="card-icon">📊</div>
-                    <h3>Custo por Hectare</h3>
-                    <div class="value" id="costPerHectare">R$ 0,00</div>
-                    <div class="change" id="hectareChange">-</div>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🌱</div>
-                    <h3>Safra Atual</h3>
-                    <div class="value" id="currentSeason">-</div>
-                    <div class="change" id="seasonChange">-</div>
-                </div>
-                <div class="card">
-                    <div class="card-icon">📈</div>
-                    <h3>Rentabilidade</h3>
-                    <div class="value" id="profitability">-</div>
-                    <div class="change" id="profitChange">-</div>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🚜</div>
-                    <h3>Equipamentos</h3>
-                    <div class="value" id="equipmentCost">R$ 0,00</div>
-                    <div class="change" id="equipmentChange">-</div>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🌾</div>
-                    <h3>Insumos</h3>
-                    <div class="value" id="inputCost">R$ 0,00</div>
-                    <div class="change" id="inputChange">-</div>
+                <div class="header-actions">
+                    <button onclick="exportToCSV()" class="btn btn-secondary">
+                        📊 Exportar CSV
+                    </button>
+                    <button onclick="exportToPDF()" class="btn btn-secondary">
+                        📄 Gerar PDF
+                    </button>
+                    <button onclick="clearAllData()" class="btn btn-danger">
+                        🗑️ Limpar Tudo
+                    </button>
                 </div>
             </div>
         </div>
+    </header>
 
-        <div class="form-section">
-            <h2>📝 Registrar Novo Custo Rural</h2>
-            <form id="costForm">
-                <div class="form-row">
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- Seção de Informações da Fazenda -->
+            <section class="farm-info">
+                <h2>🏡 Informações da Propriedade</h2>
+                <div class="farm-form">
                     <div class="form-group">
-                        <label for="description">Descrição do Custo</label>
-                        <input type="text" id="description" required placeholder="Ex: Sementes de soja, Combustível trator, etc.">
+                        <label for="farmName">Nome da Propriedade:</label>
+                        <input type="text" id="farmName" placeholder="Ex: Fazenda São João" onchange="updateFarmData()">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="category">Categoria</label>
-                        <select id="category" required>
-                            <option value="">Selecione uma categoria</option>
-                            <optgroup label="🌾 Produção Vegetal">
-                                <option value="sementes">Sementes e Mudas</option>
+                        <label for="farmOwner">Proprietário:</label>
+                        <input type="text" id="farmOwner" placeholder="Ex: João Silva" onchange="updateFarmData()">
+                    </div>
+                    <div class="form-group">
+                        <label for="farmSize">Área Total (hectares):</label>
+                        <input type="number" id="farmSize" placeholder="Ex: 100" step="0.01" onchange="updateFarmData()">
+                    </div>
+                    <div class="form-group">
+                        <label for="farmLocation">Localização:</label>
+                        <input type="text" id="farmLocation" placeholder="Ex: Cidade, Estado" onchange="updateFarmData()">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Expandido -->
+            <section class="dashboard">
+                <h2>📊 Dashboard Financeiro</h2>
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Custo Total</h3>
+                            <span class="card-icon">💰</span>
+                        </div>
+                        <div class="card-value" id="totalCost">R$ 0,00</div>
+                        <div class="card-change" id="totalChange">-</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Custo por Hectare</h3>
+                            <span class="card-icon">🌾</span>
+                        </div>
+                        <div class="card-value" id="costPerHectare">R$ 0,00</div>
+                        <div class="card-change" id="hectareChange">-</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Total de Registros</h3>
+                            <span class="card-icon">📝</span>
+                        </div>
+                        <div class="card-value" id="totalRecords">0</div>
+                        <div class="card-change" id="recordsChange">-</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Maior Gasto</h3>
+                            <span class="card-icon">📈</span>
+                        </div>
+                        <div class="card-value" id="highestCost">R$ 0,00</div>
+                        <div class="card-change" id="highestCategory">-</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Média Mensal</h3>
+                            <span class="card-icon">📅</span>
+                        </div>
+                        <div class="card-value" id="monthlyAverage">R$ 0,00</div>
+                        <div class="card-change" id="monthlyChange">-</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Safra Atual</h3>
+                            <span class="card-icon">🌱</span>
+                        </div>
+                        <div class="card-value" id="currentSeason">-</div>
+                        <div class="card-change" id="seasonTotal">R$ 0,00</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filtros e Pesquisa -->
+            <section class="filters-section">
+                <h2>🔍 Filtros e Pesquisa</h2>
+                <div class="filters-form">
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="searchFilter">Buscar:</label>
+                            <input type="text" id="searchFilter" placeholder="Buscar por descrição..." oninput="applyFilters()">
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryFilter">Categoria:</label>
+                            <select id="categoryFilter" onchange="applyFilters()">
+                                <option value="">Todas as categorias</option>
+                                <option value="sementes">Sementes</option>
                                 <option value="fertilizantes">Fertilizantes</option>
-                                <option value="defensivos">Defensivos Agrícolas</option>
-                                <option value="irrigacao">Irrigação</option>
-                                <option value="colheita">Colheita</option>
-                            </optgroup>
-                            <optgroup label="🐄 Produção Animal">
-                                <option value="racoes">Rações e Suplementos</option>
-                                <option value="medicamentos">Medicamentos Veterinários</option>
-                                <option value="reproducao">Reprodução Animal</option>
-                                <option value="manejo">Manejo Animal</option>
-                            </optgroup>
-                            <optgroup label="🚜 Equipamentos e Máquinas">
-                                <option value="maquinas">Máquinas Agrícolas</option>
-                                <option value="implementos">Implementos</option>
-                                <option value="manutencao">Manutenção</option>
+                                <option value="defensivos">Defensivos</option>
+                                <option value="maquinas">Máquinas e Implementos</option>
                                 <option value="combustivel">Combustível</option>
-                            </optgroup>
-                            <optgroup label="👥 Mão de Obra">
                                 <option value="mao-obra-fixa">Mão de Obra Fixa</option>
                                 <option value="mao-obra-temporaria">Mão de Obra Temporária</option>
-                                <option value="servicos-terceiros">Serviços de Terceiros</option>
-                            </optgroup>
-                            <optgroup label="🏗️ Infraestrutura">
-                                <option value="construcoes">Construções</option>
-                                <option value="cercas">Cercas e Divisões</option>
-                                <option value="energia">Energia Elétrica</option>
-                                <option value="agua">Água e Perfuração</option>
-                            </optgroup>
-                            <optgroup label="📋 Administrativo">
                                 <option value="impostos">Impostos e Taxas</option>
                                 <option value="seguros">Seguros</option>
-                                <option value="consultoria">Consultoria</option>
-                                <option value="financeiro">Custos Financeiros</option>
-                            </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cultureFilter">Cultura:</label>
+                            <select id="cultureFilter" onchange="applyFilters()">
+                                <option value="">Todas as culturas</option>
+                                <option value="geral">Geral</option>
+                                <option value="soja">Soja</option>
+                                <option value="milho">Milho</option>
+                                <option value="trigo">Trigo</option>
+                                <option value="feijao">Feijão</option>
+                                <option value="algodao">Algodão</option>
+                                <option value="cana">Cana-de-açúcar</option>
+                                <option value="cafe">Café</option>
+                                <option value="arroz">Arroz</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="seasonFilter">Safra:</label>
+                            <select id="seasonFilter" onchange="applyFilters()">
+                                <option value="">Todas as safras</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateFromFilter">Data de:</label>
+                            <input type="date" id="dateFromFilter" onchange="applyFilters()">
+                        </div>
+                        <div class="form-group">
+                            <label for="dateToFilter">Data até:</label>
+                            <input type="date" id="dateToFilter" onchange="applyFilters()">
+                        </div>
+                        <div class="form-group">
+                            <label for="minValueFilter">Valor mínimo:</label>
+                            <input type="number" id="minValueFilter" placeholder="0.00" step="0.01" oninput="applyFilters()">
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button onclick="clearFilters()" class="btn btn-secondary">
+                            🔄 Limpar Filtros
+                        </button>
+                        <button onclick="saveFilters()" class="btn btn-secondary">
+                            💾 Salvar Filtros
+                        </button>
+                        <div class="filter-stats" id="filterStats">
+                            <span>📊 0 registros encontrados</span>
+                            <span>💰 Total: R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Formulário de Cadastro Expandido -->
+            <section class="cost-form-section">
+                <h2>➕ Cadastrar Novo Custo</h2>
+                <form id="costForm" class="cost-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date">Data *</label>
+                            <input type="date" id="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="season">Safra *</label>
+                            <input type="text" id="season" placeholder="Ex: 2024/2025" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="culture">Cultura</label>
+                            <select id="culture">
+                                <option value="geral">Geral</option>
+                                <option value="soja">Soja</option>
+                                <option value="milho">Milho</option>
+                                <option value="trigo">Trigo</option>
+                                <option value="feijao">Feijão</option>
+                                <option value="algodao">Algodão</option>
+                                <option value="cana">Cana-de-açúcar</option>
+                                <option value="cafe">Café</option>
+                                <option value="arroz">Arroz</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="description">Descrição *</label>
+                            <input type="text" id="description" placeholder="Ex: Compra de sementes de soja" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Categoria *</label>
+                            <select id="category" required>
+                                <option value="">Selecione...</option>
+                                <option value="sementes">Sementes</option>
+                                <option value="fertilizantes">Fertilizantes</option>
+                                <option value="defensivos">Defensivos</option>
+                                <option value="maquinas">Máquinas e Implementos</option>
+                                <option value="combustivel">Combustível</option>
+                                <option value="mao-obra-fixa">Mão de Obra Fixa</option>
+                                <option value="mao-obra-temporaria">Mão de Obra Temporária</option>
+                                <option value="impostos">Impostos e Taxas</option>
+                                <option value="seguros">Seguros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="supplier">Fornecedor</label>
+                            <input type="text" id="supplier" placeholder="Ex: Agropecuária Silva">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="amount">Valor (R$) *</label>
+                            <input type="number" id="amount" placeholder="Ex: 1500.00" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="area">Área (hectares)</label>
+                            <input type="number" id="area" placeholder="Ex: 10.5" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentMethod">Forma de Pagamento</label>
+                            <select id="paymentMethod">
+                                <option value="">Selecione...</option>
+                                <option value="dinheiro">Dinheiro</option>
+                                <option value="cartao">Cartão</option>
+                                <option value="pix">PIX</option>
+                                <option value="boleto">Boleto</option>
+                                <option value="cheque">Cheque</option>
+                                <option value="financiamento">Financiamento</option>
+                                <option value="credito">Crédito</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="notes">Observações</label>
+                            <textarea id="notes" rows="3" placeholder="Observações adicionais sobre este custo..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            ➕ Cadastrar Custo
+                        </button>
+                        <button type="button" onclick="document.getElementById('costForm').reset(); setTodayDate()" class="btn btn-secondary">
+                            🔄 Limpar Formulário
+                        </button>
+                        <button type="button" onclick="duplicateLastEntry()" class="btn btn-secondary">
+                            📋 Duplicar Último
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Gráficos Expandidos -->
+            <section class="charts-section">
+                <h2>📈 Análises Gráficas</h2>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Custos por Categoria</h3>
+                        <canvas id="categoryChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Evolução Mensal</h3>
+                        <canvas id="monthlyChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Custos por Cultura</h3>
+                        <canvas id="cultureChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Comparação por Safra</h3>
+                        <canvas id="seasonChart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabela de Custos Expandida -->
+            <section class="costs-table-section">
+                <h2>📋 Lista Completa de Custos</h2>
+                <div class="table-controls">
+                    <div class="table-actions">
+                        <button onclick="selectAll()" class="btn btn-secondary">
+                            ☑️ Selecionar Todos
+                        </button>
+                        <button onclick="deleteSelected()" class="btn btn-danger">
+                            🗑️ Excluir Selecionados
+                        </button>
+                        <button onclick="exportSelected()" class="btn btn-secondary">
+                            📊 Exportar Selecionados
+                        </button>
+                    </div>
+                    <div class="table-pagination">
+                        <select id="itemsPerPage" onchange="changeItemsPerPage()">
+                            <option value="10">10 por página</option>
+                            <option value="25" selected>25 por página</option>
+                            <option value="50">50 por página</option>
+                            <option value="100">100 por página</option>
+                            <option value="all">Todos</option>
                         </select>
                     </div>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="amount">Valor (R$)</label>
-                        <input type="number" id="amount" step="0.01" required placeholder="0.00">
+                <div class="table-container">
+                    <table id="costsTable" class="costs-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()"></th>
+                                <th onclick="sortTable('date')">Data <span class="sort-arrow">↕️</span></th>
+                                <th onclick="sortTable('description')">Descrição <span class="sort-arrow">↕️</span></th>
+                                <th onclick="sortTable('category')">Categoria <span class="sort-arrow">↕️</span></th>
+                                <th onclick="sortTable('culture')">Cultura <span class="sort-arrow">↕️</span></th>
+                                <th onclick="sortTable('season')">Safra <span class="sort-arrow">↕️</span></th>
+                                <th onclick="sortTable('area')">Área (ha) <span class="sort-arrow">↕️</span></th>
+                                <th onclick="sortTable('amount')">Valor <span class="sort-arrow">↕️</span></th>
+                                <th>Custo/ha</th>
+                                <th>Fornecedor</th>
+                                <th>Pagamento</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="costsTableBody">
+                            <!-- Dados serão inseridos aqui pelo JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-footer">
+                    <div class="pagination-info" id="paginationInfo">
+                        Mostrando 0-0 de 0 registros
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="date">Data</label>
-                        <input type="date" id="date" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="season">Safra</label>
-                        <select id="season" required>
-                            <option value="">Selecione a safra</option>
-                            <option value="2024/2025">2024/2025</option>
-                            <option value="2025/2026">2025/2026</option>
-                            <option value="2026/2027">2026/2027</option>
-                        </select>
+                    <div class="pagination-controls" id="paginationControls">
+                        <!-- Controles de paginação serão inseridos aqui -->
                     </div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="area">Área Utilizada (hectares)</label>
-                        <input type="number" id="area" step="0.01" placeholder="0.00">
+            </section>
+
+            <!-- Relatórios Avançados -->
+            <section class="reports-section">
+                <h2>📄 Relatórios Avançados</h2>
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <h3>📊 Relatório por Categoria</h3>
+                        <p>Análise detalhada dos gastos por categoria de custo</p>
+                        <button onclick="generateCategoryReport()" class="btn btn-primary">Gerar Relatório</button>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="culture">Cultura</label>
-                        <select id="culture">
-                            <option value="">Selecione a cultura</option>
-                            <option value="soja">Soja</option>
-                            <option value="milho">Milho</option>
-                            <option value="trigo">Trigo</option>
-                            <option value="algodao">Algodão</option>
-                            <option value="arroz">Arroz</option>
-                            <option value="feijao">Feijão</option>
-                            <option value="cana">Cana-de-açúcar</option>
-                            <option value="cafe">Café</option>
-                            <option value="bovinos">Bovinos</option>
-                            <option value="suinos">Suínos</option>
-                            <option value="aves">Aves</option>
-                            <option value="geral">Geral</option>
-                        </select>
+                    <div class="report-card">
+                        <h3>🌾 Relatório por Cultura</h3>
+                        <p>Comparativo de custos entre diferentes culturas</p>
+                        <button onclick="generateCultureReport()" class="btn btn-primary">Gerar Relatório</button>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="supplier">Fornecedor</label>
-                        <input type="text" id="supplier" placeholder="Nome do fornecedor">
+                    <div class="report-card">
+                        <h3>📅 Relatório Mensal</h3>
+                        <p>Evolução dos custos ao longo dos meses</p>
+                        <button onclick="generateMonthlyReport()" class="btn btn-primary">Gerar Relatório</button>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="paymentMethod">Forma de Pagamento</label>
-                        <select id="paymentMethod">
-                            <option value="">Selecione</option>
-                            <option value="avista">À Vista</option>
-                            <option value="30-dias">30 dias</option>
-                            <option value="60-dias">60 dias</option>
-                            <option value="90-dias">90 dias</option>
-                            <option value="parcelado">Parcelado</option>
-                            <option value="financiamento">Financiamento</option>
-                        </select>
+                    <div class="report-card">
+                        <h3>🌱 Relatório por Safra</h3>
+                        <p>Comparação de custos entre diferentes safras</p>
+                        <button onclick="generateSeasonReport()" class="btn btn-primary">Gerar Relatório</button>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="notes">Observações</label>
-                        <textarea id="notes" placeholder="Observações adicionais..." rows="2"></textarea>
+                    <div class="report-card">
+                        <h3>💰 Relatório Financeiro</h3>
+                        <p>Resumo completo da situação financeira</p>
+                        <button onclick="generateFinancialReport()" class="btn btn-primary">Gerar Relatório</button>
+                    </div>
+                    <div class="report-card">
+                        <h3>📈 Relatório de Tendências</h3>
+                        <p>Análise de tendências e projeções</p>
+                        <button onclick="generateTrendReport()" class="btn btn-primary">Gerar Relatório</button>
                     </div>
                 </div>
-                
-                <button type="submit" class="btn btn-primary">
-                    <span>➕ Registrar Custo</span>
-                </button>
-            </form>
+            </section>
+
         </div>
+    </main>
 
-        <div class="filters-section">
-            <h2>🔍 Filtros e Análises Avançadas</h2>
-            <div class="filters">
-                <div class="filter-group">
-                    <label for="searchFilter">Buscar por descrição</label>
-                    <input type="text" id="searchFilter" placeholder="Digite para buscar...">
-                </div>
-                
-                <div class="filter-group">
-                    <label for="categoryFilter">Filtrar por categoria</label>
-                    <select id="categoryFilter">
-                        <option value="">Todas as categorias</option>
-                        <optgroup label="🌾 Produção Vegetal">
-                            <option value="sementes">Sementes e Mudas</option>
-                            <option value="fertilizantes">Fertilizantes</option>
-                            <option value="defensivos">Defensivos Agrícolas</option>
-                            <option value="irrigacao">Irrigação</option>
-                            <option value="colheita">Colheita</option>
-                        </optgroup>
-                        <optgroup label="🐄 Produção Animal">
-                            <option value="racoes">Rações e Suplementos</option>
-                            <option value="medicamentos">Medicamentos Veterinários</option>
-                            <option value="reproducao">Reprodução Animal</option>
-                            <option value="manejo">Manejo Animal</option>
-                        </optgroup>
-                        <optgroup label="🚜 Equipamentos">
-                            <option value="maquinas">Máquinas Agrícolas</option>
-                            <option value="implementos">Implementos</option>
-                            <option value="manutencao">Manutenção</option>
-                            <option value="combustivel">Combustível</option>
-                        </optgroup>
-                        <optgroup label="👥 Mão de Obra">
-                            <option value="mao-obra-fixa">Mão de Obra Fixa</option>
-                            <option value="mao-obra-temporaria">Mão de Obra Temporária</option>
-                            <option value="servicos-terceiros">Serviços de Terceiros</option>
-                        </optgroup>
-                        <optgroup label="🏗️ Infraestrutura">
-                            <option value="construcoes">Construções</option>
-                            <option value="cercas">Cercas e Divisões</option>
-                            <option value="energia">Energia Elétrica</option>
-                            <option value="agua">Água e Perfuração</option>
-                        </optgroup>
-                        <optgroup label="📋 Administrativo">
-                            <option value="impostos">Impostos e Taxas</option>
-                            <option value="seguros">Seguros</option>
-                            <option value="consultoria">Consultoria</option>
-                            <option value="financeiro">Custos Financeiros</option>
-                        </optgroup>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="cultureFilter">Filtrar por cultura</label>
-                    <select id="cultureFilter">
-                        <option value="">Todas as culturas</option>
-                        <option value="soja">Soja</option>
-                        <option value="milho">Milho</option>
-                        <option value="trigo">Trigo</option>
-                        <option value="algodao">Algodão</option>
-                        <option value="arroz">Arroz</option>
-                        <option value="feijao">Feijão</option>
-                        <option value="cana">Cana-de-açúcar</option>
-                        <option value="cafe">Café</option>
-                        <option value="bovinos">Bovinos</option>
-                        <option value="suinos">Suínos</option>
-                        <option value="aves">Aves</option>
-                        <option value="geral">Geral</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="seasonFilter">Filtrar por safra</label>
-                    <select id="seasonFilter">
-                        <option value="">Todas as safras</option>
-                        <option value="2024/2025">2024/2025</option>
-                        <option value="2025/2026">2025/2026</option>
-                        <option value="2026/2027">2026/2027</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="dateFromFilter">Data de</label>
-                    <input type="date" id="dateFromFilter">
-                </div>
-                
-                <div class="filter-group">
-                    <label for="dateToFilter">Data até</label>
-                    <input type="date" id="dateToFilter">
-                </div>
-                
-                <button class="btn btn-secondary" onclick="clearFilters()">
-                    🗑️ Limpar Filtros
-                </button>
-                
-                <button class="btn btn-info" onclick="generateReport()">
-                    📊 Gerar Relatório
-                </button>
-            </div>
-        </div>
-
-        <div class="table-section">
-            <div class="table-header">
-                <h2>📊 Registro de Custos Rurais</h2>
-                <div class="table-actions">
-                    <button class="btn btn-success" onclick="exportToCSV()">
-                        📄 Exportar CSV
-                    </button>
-                    <button class="btn btn-warning" onclick="exportToExcel()">
-                        � Exportar Excel
-                    </button>
-                    <button class="btn btn-info" onclick="exportToPDF()">
-                        �📋 Exportar PDF
-                    </button>
-                    <button class="btn btn-primary" onclick="printReport()">
-                        🖨️ Imprimir
-                    </button>
-                    <button class="btn btn-danger" onclick="clearAllData()">
-                        🗑️ Limpar Todos
-                    </button>
-                </div>
-            </div>
-            
-            <div class="table-responsive">
-                <table id="costsTable">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Descrição</th>
-                            <th>Categoria</th>
-                            <th>Cultura</th>
-                            <th>Safra</th>
-                            <th>Área (ha)</th>
-                            <th>Valor Total</th>
-                            <th>Valor/ha</th>
-                            <th>Fornecedor</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="costsTableBody">
-                        <!-- Os dados serão inseridos aqui via JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <div id="emptyState" class="empty-state">
-                <div class="empty-icon">🌾</div>
-                <h3>Nenhum custo registrado</h3>
-                <p>Comece registrando os custos da sua propriedade rural usando o formulário acima.</p>
-                <div class="empty-actions">
-                    <button class="btn btn-primary" onclick="scrollToForm()">
-                        📝 Registrar Primeiro Custo
-                    </button>
-                    <button class="btn btn-secondary" onclick="addSampleData()">
-                        📊 Adicionar Dados de Exemplo
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="analytics-section">
-            <div class="analytics-grid">
-                <div class="chart-section">
-                    <h2>📈 Análise por Categoria</h2>
-                    <div id="categoryChart" class="chart-container">
-                        <!-- Gráfico será gerado via JavaScript -->
-                    </div>
-                </div>
-                
-                <div class="chart-section">
-                    <h2>🌾 Custos por Cultura</h2>
-                    <div id="cultureChart" class="chart-container">
-                        <!-- Gráfico será gerado via JavaScript -->
-                    </div>
-                </div>
-                
-                <div class="chart-section">
-                    <h2>📊 Evolução Mensal</h2>
-                    <div id="monthlyChart" class="chart-container">
-                        <!-- Gráfico será gerado via JavaScript -->
-                    </div>
-                </div>
-                
-                <div class="chart-section">
-                    <h2>🏆 Top 5 Maiores Custos</h2>
-                    <div id="topCostsChart" class="chart-container">
-                        <!-- Gráfico será gerado via JavaScript -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="reports-section">
-            <h2>📋 Relatórios Gerenciais</h2>
-            <div class="reports-grid">
-                <div class="report-card">
-                    <h3>💰 Resumo Financeiro</h3>
-                    <div id="financialSummary" class="report-content">
-                        <!-- Conteúdo será gerado via JavaScript -->
-                    </div>
-                </div>
-                
-                <div class="report-card">
-                    <h3>🌾 Análise por Safra</h3>
-                    <div id="seasonAnalysis" class="report-content">
-                        <!-- Conteúdo será gerado via JavaScript -->
-                    </div>
-                </div>
-                
-                <div class="report-card">
-                    <h3>📊 Indicadores de Produtividade</h3>
-                    <div id="productivityIndicators" class="report-content">
-                        <!-- Conteúdo será gerado via JavaScript -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para confirmação -->
-    <div id="confirmModal" class="modal">
-        <div class="modal-content">
-            <h3>⚠️ Confirmação</h3>
-            <p id="confirmMessage"></p>
-            <div class="modal-actions">
-                <button class="btn btn-danger" id="confirmBtn">Confirmar</button>
-                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para relatório -->
-    <div id="reportModal" class="modal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h3>📊 Relatório de Custos Rurais</h3>
-                <button class="close-btn" onclick="closeReportModal()">&times;</button>
-            </div>
-            <div id="reportContent" class="report-modal-content">
-                <!-- Conteúdo do relatório será gerado via JavaScript -->
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-primary" onclick="printReport()">🖨️ Imprimir</button>
-                <button class="btn btn-success" onclick="exportReportToCSV()">📄 Exportar CSV</button>
-                <button class="btn btn-secondary" onclick="closeReportModal()">Fechar</button>
-            </div>
-        </div>
-    </div>
-
-
-
-    <!-- Footer -->
-        <footer class="footer">
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
             <div class="footer-content">
-                <p>&copy; 2025 AgroGest Pro - Sistema de Gestão Rural Profissional</p>
-                <p>Desenvolvido especialmente para fazendas, sítios e propriedades rurais</p>
+                <div class="footer-section">
+                    <h4>📊 Estatísticas Rápidas</h4>
+                    <div id="footerStats">
+                        <span>Total de custos: <strong id="footerTotalCosts">0</strong></span>
+                        <span>Valor total: <strong id="footerTotalValue">R$ 0,00</strong></span>
+                        <span>Última atualização: <strong id="lastUpdate">-</strong></span>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <p>&copy; 2024 Planilha de Custos Rurais - Sistema completo de controle financeiro para propriedades rurais</p>
+                </div>
             </div>
-        </footer>
-        
+        </div>
+    </footer>
+
+    <!-- Modal para Relatórios -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">📊 Relatório</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Conteúdo do relatório -->
+            </div>
+            <div class="modal-footer">
+                <button onclick="printReport()" class="btn btn-primary">🖨️ Imprimir</button>
+                <button onclick="exportReportPDF()" class="btn btn-secondary">📄 PDF</button>
+                <button onclick="closeModal()" class="btn btn-secondary">❌ Fechar</button>
+            </div>
         </div>
     </div>
 
